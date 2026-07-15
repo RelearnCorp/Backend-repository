@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 export function formatUserResponse(user: any) {
   const { password_hash, ...userWithoutPassword } = user;
   return userWithoutPassword;
@@ -82,4 +84,44 @@ export function formatAnalyticsResponse(data: any) {
     quiz_stats: data.quiz_stats || [],
     ai_usage_stats: data.ai_usage_stats || {},
   };
+}
+
+export function sendSuccess(data: any, message: string, status: number = 200) {
+  return NextResponse.json(
+    {
+      success: true,
+      message,
+      data,
+    },
+    { status }
+  );
+}
+
+export function sendError(code: string, status: number, message?: string) {
+  return NextResponse.json(
+    {
+      success: false,
+      error: code,
+      message: message || getErrorMessage(code),
+    },
+    { status }
+  );
+}
+
+function getErrorMessage(code: string): string {
+  const messages: Record<string, string> = {
+    VALIDATION_ERROR: 'Validation failed',
+    FORBIDDEN: 'Access denied',
+    NOT_FOUND: 'Resource not found',
+    UNAUTHORIZED: 'Unauthorized',
+    INTERNAL_SERVER_ERROR: 'Internal server error',
+    CLASS_NOT_FOUND: 'Class not found',
+    QUESTION_NOT_FOUND: 'Question not found',
+    SESSION_NOT_FOUND: 'Session not found',
+    ALREADY_ENROLLED: 'Already enrolled in this class',
+    UPLOAD_FAILED: 'File upload failed',
+    NOT_IMPLEMENTED: 'Not implemented yet',
+  };
+
+  return messages[code] || 'An error occurred';
 }

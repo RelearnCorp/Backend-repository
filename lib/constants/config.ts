@@ -54,6 +54,7 @@ export const TABLES = {
   CHAT_MESSAGES: 'chat_messages',
   AI_USAGE_LOGS: 'ai_usage_logs',
   STUDENT_PROGRESS: 'student_progress',
+  REFRESH_TOKENS: 'refresh_tokens',
 } as const;
 
 // Supabase Storage buckets

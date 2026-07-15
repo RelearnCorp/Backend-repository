@@ -12,6 +12,10 @@ const client = new Groq({
   apiKey: groqApiKey,
 });
 
+export function getGroqClient() {
+  return client;
+}
+
 export async function generateChatResponse(
   messages: Array<{ role: 'user' | 'assistant'; content: string }>,
   systemPrompt?: string,

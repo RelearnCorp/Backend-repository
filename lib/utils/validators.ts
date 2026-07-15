@@ -46,7 +46,7 @@ export const CreateQuizSchema = z.object({
 export const QuestionSchema = z.object({
   type: z.enum(['multiple_choice', 'short_answer', 'essay']),
   content: z.string().min(1, 'Question content is required'),
-  options: z.record(z.string(), z.string()).optional(),
+  options: z.record(z.string()).optional(),
   correct_answer: z.string().min(1, 'Correct answer is required'),
   explanation: z.string().optional(),
   order_index: z.number().int().nonnegative(),
@@ -101,21 +101,21 @@ export const PaginationSchema = z.object({
 });
 
 // Validation helper
-export function validate<T extends z.ZodTypeAny>(
-  schema: T,
-  data: unknown
-): z.infer<T> {
-  const result = schema.safeParse(data);
-
-  if (!result.success) {
-    const fieldErrors = result.error.flatten().fieldErrors;
-
-    throw new AppError(
-      'VAL_INVALID_INPUT',
-      400,
-      `Validation failed: ${JSON.stringify(fieldErrors)}`
-    );
+export function validate<T>(schema: z.ZodSchema, data: unknown): T {
+  try {
+    return schema.parse(data) as T;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const fieldErrors = error.errors.reduce(
+        (acc, err) => {
+          const path = err.path.join('.');
+          acc[path] = err.message;
+          return acc;
+        },
+        {} as Record<string, string>
+      );
+      throw new AppError('VAL_INVALID_INPUT', 400, 'Validation failed');
+    }
+    throw error;
   }
-
-  return result.data;
 }

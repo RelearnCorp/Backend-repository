@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       user_id: user.id,
       email: user.email,
       role: user.role?.name ?? '',
-      permissions: user.role?.permissions ?? {},
+      permissions : user.role?.permissions ?? {},
     });
 
     return createSuccessResponse({

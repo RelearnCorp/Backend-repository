@@ -8,7 +8,7 @@ import { AppError } from '@/lib/utils/error-handler';
  */
 export async function getAuthUser(request: NextRequest): Promise<JWTPayload> {
   const authHeader = request.headers.get('authorization');
-  const token = extractTokenFromHeader(authHeader ?? undefined);
+  const token = extractTokenFromHeader(authHeader);
 
   if (!token) {
     throw new AppError('AUTH_INVALID_TOKEN', 401);
@@ -70,4 +70,17 @@ export async function requirePermissionMiddleware(
   }
 
   return user;
+}
+
+/**
+ * Enhanced authenticate request that includes RBAC info
+ */
+export async function authenticateRequest(request: NextRequest) {
+  const auth = await getAuthUser(request);
+
+  return {
+    userId: auth.userId,
+    userRole: auth.role,
+    rolePermissions: auth.permissions,
+  };
 }

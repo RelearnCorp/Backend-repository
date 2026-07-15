@@ -156,3 +156,12 @@ export const HINT_TEMPLATES = {
   BREAKDOWN: 'Break this problem into smaller parts. First, focus on [PART1]. Then, think about [PART2].',
   EXAMPLE: 'Let me give you an example: [EXAMPLE]. Can you apply this logic to your problem?',
 };
+
+// Alias for backward compatibility
+export function generateHintPrompt(
+  questionText: string,
+  questionType: string,
+  hintLevel: 1 | 2 | 3
+): string {
+  return buildHintPrompt(questionText, questionType, hintLevel);
+}
