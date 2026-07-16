@@ -2,18 +2,39 @@ import { Groq } from 'groq-sdk';
 import { AI_CONFIG } from '@/lib/constants/config';
 import { AppError } from '@/lib/utils/error-handler';
 
-const groqApiKey = process.env.GROQ_API_KEY;
+let groqClient: ReturnType<typeof createGroqClient> | null = null;
 
-if (!groqApiKey && process.env.NODE_ENV === 'production') {
-  console.error('[Groq] ERROR: GROQ_API_KEY not configured in production!');
+function createGroqClient() {
+  const groqApiKey = process.env.GROQ_API_KEY;
+  if (!groqApiKey) {
+    if (process.env.NODE_ENV === 'production') {
+      console.error('[Groq] ERROR: GROQ_API_KEY not configured in production!');
+    }
+
+    return {
+      messages: {
+        create: async () => {
+          throw new AppError('AI_API_KEY_MISSING', 500);
+        },
+      },
+      chat: {
+        completions: {
+          create: async () => {
+            throw new AppError('AI_API_KEY_MISSING', 500);
+          },
+        },
+      },
+    } as any;
+  }
+
+  return new Groq({ apiKey: groqApiKey });
 }
 
-const client = new Groq({
-  apiKey: groqApiKey,
-});
-
 export function getGroqClient() {
-  return client;
+  if (!groqClient) {
+    groqClient = createGroqClient();
+  }
+  return groqClient;
 }
 
 export async function generateChatResponse(

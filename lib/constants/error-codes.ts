@@ -32,6 +32,8 @@ export const ERROR_CODES = {
   QUIZ_NOT_FOUND: { code: 'QUIZ_002', status: 404, message: 'Quiz not found' },
   CLASS_NOT_FOUND: { code: 'CLASS_001', status: 404, message: 'Class not found' },
   NOT_ENROLLED: { code: 'CLASS_002', status: 403, message: 'Student not enrolled in class' },
+  ALREADY_ENROLLED: { code: 'CLASS_003', status: 409, message: 'Already enrolled in this class' },
+  SESSION_NOT_FOUND: { code: 'SESSION_001', status: 404, message: 'Session not found' },
 
   // Server errors
   SERVER_ERROR: { code: 'SERVER_001', status: 500, message: 'Internal server error' },

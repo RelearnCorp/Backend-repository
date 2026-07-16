@@ -263,21 +263,6 @@ export async function createQuiz(
   return data;
 }
 
-export async function getQuizById(quizId: string) {
-  const supabase = getSupabaseServiceClient();
-
-  const { data, error } = await supabase
-    .from(TABLES.QUIZZES)
-    .select('*')
-    .eq('id', quizId)
-    .single();
-
-  if (error && error.code !== 'PGRST116') {
-    throw new AppError('DB_QUERY_FAILED', 500);
-  }
-
-  return data || null;
-}
 
 export async function publishQuiz(quizId: string) {
   const supabase = getSupabaseServiceClient();
@@ -920,22 +905,6 @@ export async function removeStudent(studentId: string, classId: string) {
 // ============================================================================
 // MATERIAL QUERIES
 // ============================================================================
-
-export async function getMaterialById(materialId: string) {
-  const supabase = getSupabaseServiceClient();
-
-  const { data, error } = await supabase
-    .from(TABLES.MATERIALS)
-    .select('*')
-    .eq('id', materialId)
-    .single();
-
-  if (error && error.code !== 'PGRST116') {
-    throw new AppError('DB_QUERY_FAILED', 500);
-  }
-
-  return data || null;
-}
 
 // ============================================================================
 // QUIZ QUERIES
