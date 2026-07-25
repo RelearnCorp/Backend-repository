@@ -1,0 +1,20 @@
+meta {
+  name: AI Hint
+  type: http
+  seq: 22
+}
+
+post {
+  url: {{baseUrl}}/api/ai/hint
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  "question_id": "replace-with-question-id",
+  "hint_level": "1"
+}

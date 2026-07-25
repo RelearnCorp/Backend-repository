@@ -1,0 +1,20 @@
+meta {
+  name: Classes Create
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/classes/create
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  "name": "Math 101",
+  "description": "Introductory mathematics class"
+}

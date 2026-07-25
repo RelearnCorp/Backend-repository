@@ -1,0 +1,15 @@
+meta {
+  name: Analytics AI Usage
+  type: http
+  seq: 19
+}
+
+get {
+  url: {{baseUrl}}/api/analytics/ai-usage?class_id={{classId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

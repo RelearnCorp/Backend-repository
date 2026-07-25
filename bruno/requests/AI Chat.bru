@@ -1,0 +1,21 @@
+meta {
+  name: AI Chat
+  type: http
+  seq: 21
+}
+
+post {
+  url: {{baseUrl}}/api/ai/chat
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  "session_id": "replace-with-chat-session-id",
+  "message": "Explain the concept of a class in programming",
+  "context": "Educational tutor"
+}

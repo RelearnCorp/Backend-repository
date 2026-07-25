@@ -1,0 +1,15 @@
+meta {
+  name: Materials List
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/api/materials/list?class_id={{classId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

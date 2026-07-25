@@ -1,0 +1,21 @@
+meta {
+  name: Quizzes Create
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{baseUrl}}/api/quizzes/create
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  "class_id": "{{classId}}",
+  "title": "Intro Quiz",
+  "description": "Simple quiz for testing"
+}

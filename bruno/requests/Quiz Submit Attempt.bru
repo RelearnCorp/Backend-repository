@@ -1,0 +1,24 @@
+meta {
+  name: Quiz Submit Attempt
+  type: http
+  seq: 17
+}
+
+post {
+  url: {{baseUrl}}/api/quizzes/attempt/{{attemptId}}/submit
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  "answers": [
+    {
+      "question_id": "replace-with-question-id",
+      "student_answer": "4"
+    }
+  ]
+}

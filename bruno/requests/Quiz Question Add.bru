@@ -1,0 +1,22 @@
+meta {
+  name: Quiz Question Add
+  type: http
+  seq: 15
+}
+
+post {
+  url: {{baseUrl}}/api/quizzes/{{quizId}}/questions
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  "question_text": "What is 2 + 2?",
+  "question_type": "multiple_choice",
+  "options": ["3", "4", "5", "6"],
+  "correct_answer": "4"
+}

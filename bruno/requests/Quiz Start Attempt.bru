@@ -1,0 +1,19 @@
+meta {
+  name: Quiz Start Attempt
+  type: http
+  seq: 16
+}
+
+post {
+  url: {{baseUrl}}/api/quizzes/{{quizId}}/attempt
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  "learning_mode": "normal"
+}

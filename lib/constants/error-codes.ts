@@ -21,6 +21,7 @@ export const ERROR_CODES = {
   AI_API_ERROR: { code: 'AI_001', status: 500, message: 'AI API error' },
   AI_RATE_LIMITED: { code: 'AI_002', status: 429, message: 'AI API rate limit exceeded' },
   AI_NO_CONTEXT: { code: 'AI_003', status: 400, message: 'No context available for RAG' },
+  AI_API_KEY_MISSING: { code: 'AI_004', status: 500, message: 'AI API key is missing' },
 
   // File errors
   FILE_UPLOAD_FAILED: { code: 'FILE_001', status: 500, message: 'File upload failed' },

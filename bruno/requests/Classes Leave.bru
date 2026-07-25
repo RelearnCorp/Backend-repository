@@ -1,0 +1,15 @@
+meta {
+  name: Classes Leave
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/api/classes/{{classId}}/leave
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

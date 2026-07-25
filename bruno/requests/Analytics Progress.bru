@@ -1,0 +1,15 @@
+meta {
+  name: Analytics Progress
+  type: http
+  seq: 20
+}
+
+get {
+  url: {{baseUrl}}/api/analytics/progress
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

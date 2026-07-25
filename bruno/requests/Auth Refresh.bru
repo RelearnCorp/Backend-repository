@@ -1,0 +1,15 @@
+meta {
+  name: Auth Refresh
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/auth/refresh
+  body: json
+  auth: none
+}
+
+body:json {
+  "refresh_token": "replace-with-refresh-token"
+}

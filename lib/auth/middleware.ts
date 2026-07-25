@@ -8,7 +8,8 @@ import { AppError } from '@/lib/utils/error-handler';
  */
 export async function getAuthUser(request: NextRequest): Promise<JWTPayload> {
   const authHeader = request.headers.get('authorization');
-  const token = extractTokenFromHeader(authHeader);
+  // headers.get can return null; normalize to undefined for the helper
+  const token = extractTokenFromHeader(authHeader ?? undefined);
 
   if (!token) {
     throw new AppError('AUTH_INVALID_TOKEN', 401);
@@ -79,7 +80,7 @@ export async function authenticateRequest(request: NextRequest) {
   const auth = await getAuthUser(request);
 
   return {
-    userId: auth.userId,
+    userId: auth.user_id,
     userRole: auth.role,
     rolePermissions: auth.permissions,
   };

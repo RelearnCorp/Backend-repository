@@ -1,0 +1,15 @@
+meta {
+  name: Classes List
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/classes/list
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

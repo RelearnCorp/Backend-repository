@@ -5,7 +5,7 @@ import { AppError } from '@/lib/utils/error-handler';
 let groqClient: ReturnType<typeof createGroqClient> | null = null;
 
 function createGroqClient() {
-  const groqApiKey = process.env.GROQ_API_KEY;
+  const groqApiKey = process.env.GROQ_API_KEY?.trim();
   if (!groqApiKey) {
     if (process.env.NODE_ENV === 'production') {
       console.error('[Groq] ERROR: GROQ_API_KEY not configured in production!');
@@ -27,7 +27,36 @@ function createGroqClient() {
     } as any;
   }
 
-  return new Groq({ apiKey: groqApiKey });
+  const client = new Groq({ apiKey: groqApiKey });
+
+  return {
+    messages: {
+      create: async (params: any) => {
+        const response = await client.chat.completions.create({
+          ...params,
+          stream: params.stream ?? false,
+        });
+
+        if (params.stream) {
+          return response;
+        }
+
+        return {
+          ...response,
+          content:
+            response.choices?.map((choice: any) => ({
+              type: 'text',
+              text: choice.message?.content || '',
+            })) || [],
+        };
+      },
+    },
+    chat: {
+      completions: {
+        create: async (params: any) => client.chat.completions.create(params),
+      },
+    },
+  } as any;
 }
 
 export function getGroqClient() {
@@ -46,6 +75,8 @@ export async function generateChatResponse(
     const allMessages = systemPrompt
       ? [{ role: 'system' as const, content: systemPrompt }, ...messages]
       : messages;
+
+    const client = getGroqClient();
 
     if (streaming) {
       return await client.messages.create({
@@ -69,7 +100,7 @@ export async function generateChatResponse(
     if (error.status === 429) {
       throw new AppError('AI_RATE_LIMITED', 429);
     }
-    if (error.status === 500) {
+    if (error.status === 500 || error.code === 'AI_API_KEY_MISSING') {
       throw new AppError('AI_API_ERROR', 500);
     }
     console.error('[Groq] Error:', error);

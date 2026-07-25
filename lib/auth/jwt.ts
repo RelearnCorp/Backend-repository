@@ -3,9 +3,9 @@ import { JWTPayload } from '@/types';
 import { TOKEN_CONFIG } from '@/lib/constants/config';
 import { AppError } from '@/lib/utils/error-handler';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
+const JWT_SECRET = process.env.JWT_SECRET?.trim() || (process.env.NODE_ENV === 'production' ? '' : 'dev-secret-key');
 
-if (process.env.NODE_ENV === 'production' && JWT_SECRET === 'your-secret-key-change-this') {
+if (process.env.NODE_ENV === 'production' && !JWT_SECRET) {
   console.error('[JWT] ERROR: JWT_SECRET not configured in production!');
 }
 

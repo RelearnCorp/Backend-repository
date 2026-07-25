@@ -1,0 +1,21 @@
+meta {
+  name: Materials Upload
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/api/materials/upload
+  body: formUrlEncoded
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:formUrlEncoded {
+  file: @file(./sample.txt)
+  class_id: {{classId}}
+  title: Sample Material
+}
