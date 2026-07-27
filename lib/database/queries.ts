@@ -749,25 +749,20 @@ export async function getClassById(classId: string) {
   return data || null;
 }
 
-export async function getClassByCode(
-  classCode: string
-) {
+export async function getClassByCode(classCode: string) {
   const supabase = getSupabaseServiceClient();
 
-  let query = supabase
+  const { data, error } = await supabase
     .from(TABLES.CLASSES)
-    .select('*');
-
-
-  const { data, error } = await query
-    .eq('class_code', classCode)
+    .select("*")
+    .eq("class_code", classCode)
     .single();
 
-  if (error && error.code !== 'PGRST116') {
-    throw new AppError('DB_QUERY_FAILED', 500);
+  if (error && error.code !== "PGRST116") {
+    throw new AppError("DB_QUERY_FAILED", 500);
   }
 
-  return data || null;
+  return data ?? null;
 }
 
 export async function getTeacherClasses(teacherId: string) {
