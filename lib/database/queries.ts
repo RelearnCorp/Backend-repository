@@ -861,14 +861,18 @@ export async function getClassStudents(classId: string) {
 
   const { data, error } = await supabase
     .from(TABLES.STUDENT_CLASSES)
-    .select('student_id, users(*)')
+    .select('student_id')
     .eq('class_id', classId);
+
+  console.log('[getClassStudents] classId:', classId);
+  console.log('[getClassStudents] data:', data);
+  console.log('[getClassStudents] error:', error);
 
   if (error) {
     throw new AppError('DB_QUERY_FAILED', 500);
   }
 
-  return data?.map(item => item.users) || [];
+  return data || [];
 }
 
 export async function enrollStudent(studentId: string, classId: string) {
