@@ -859,33 +859,49 @@ export async function checkEnrollment(studentId: string, classId: string): Promi
 export async function getClassStudents(classId: string) {
   const supabase = getSupabaseServiceClient();
 
-  const { data, error } = await supabase
+  // 1. Ambil student_id yang terdaftar di class
+  const { data: memberships, error: membershipError } = await supabase
     .from(TABLES.STUDENT_CLASSES)
-    .select(`
-      student_id,
-      student:users (
-        id,
-        full_name,
-        email
-      )
-    `)
+    .select('student_id')
     .eq('class_id', classId);
 
   console.log('[getClassStudents] classId:', classId);
-  console.log('[getClassStudents] data:', data);
-  console.log('[getClassStudents] error:', error);
+  console.log('[getClassStudents] memberships:', memberships);
+  console.log('[getClassStudents] membershipError:', membershipError);
 
-  if (error) {
+  if (membershipError) {
     throw new AppError('DB_QUERY_FAILED', 500);
   }
 
-return (
-  data?.map((item) => ({
-    id: item.student?.[0]?.id ?? item.student_id,
-    full_name: item.student?.[0]?.full_name ?? '',
-    email: item.student?.[0]?.email ?? '',
-  })) ?? []
-);
+  if (!memberships || memberships.length === 0) {
+    return [];
+  }
+
+  // 2. Ambil semua student_id
+  const studentIds = memberships.map(
+    (item) => item.student_id
+  );
+
+  console.log('[getClassStudents] studentIds:', studentIds);
+
+  // 3. Ambil data student dari users
+  const { data: students, error: studentsError } = await supabase
+    .from(TABLES.USERS)
+    .select(`
+      id,
+      full_name,
+      email
+    `)
+    .in('id', studentIds);
+
+  console.log('[getClassStudents] students:', students);
+  console.log('[getClassStudents] studentsError:', studentsError);
+
+  if (studentsError) {
+    throw new AppError('DB_QUERY_FAILED', 500);
+  }
+
+  return students || [];
 }
 
 export async function enrollStudent(studentId: string, classId: string) {
