@@ -786,14 +786,20 @@ export async function getStudentClasses(studentId: string) {
 
   const { data, error } = await supabase
     .from(TABLES.STUDENT_CLASSES)
-    .select('class_id, classes(*)')
+    .select(`
+      class_id,
+      classes (*)
+    `)
     .eq('student_id', studentId);
 
   if (error) {
+    console.error('[DB] getStudentClasses error:', error);
     throw new AppError('DB_QUERY_FAILED', 500);
   }
 
-  return data?.map(item => item.classes) || [];
+  return data
+    ?.map((item: any) => item.classes)
+    .filter(Boolean) || [];
 }
 
 // ============================================================================

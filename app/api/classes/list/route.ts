@@ -20,8 +20,8 @@ export async function GET(request: NextRequest) {
 
     return sendSuccess(
       {
-        classes: classes || [],
-        count: classes?.length || 0,
+        classes,
+        count: classes.length,
       },
       'Classes retrieved successfully'
     );
