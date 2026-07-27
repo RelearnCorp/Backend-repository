@@ -735,14 +735,10 @@ export async function getRoleByName(name: string): Promise<Role | null> {
 // CLASS QUERIES
 // ============================================================================
 
-export async function getClassById(classId: string, includeTeacher = false) {
+export async function getClassById(classId: string) {
   const supabase = getSupabaseServiceClient();
 
   let query = supabase.from(TABLES.CLASSES).select('*');
-
-  if (includeTeacher) {
-    query = supabase.from(TABLES.CLASSES).select('*, teacher:users(*)');
-  }
 
   const { data, error } = await query.eq('id', classId).single();
 
@@ -754,8 +750,7 @@ export async function getClassById(classId: string, includeTeacher = false) {
 }
 
 export async function getClassByCode(
-  classCode: string,
-  includeTeacher = false
+  classCode: string
 ) {
   const supabase = getSupabaseServiceClient();
 
@@ -763,11 +758,6 @@ export async function getClassByCode(
     .from(TABLES.CLASSES)
     .select('*');
 
-  if (includeTeacher) {
-    query = supabase
-      .from(TABLES.CLASSES)
-      .select('*, teacher:users(*)');
-  }
 
   const { data, error } = await query
     .eq('class_code', classCode)
