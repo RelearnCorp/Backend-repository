@@ -10,17 +10,11 @@ export async function GET(request: NextRequest) {
 
     let classes: any[] = [];
 
-    // Teachers see their own classes
     if (auth.userRole === ROLES.TEACHER) {
       classes = await getTeacherClasses(auth.userId);
-    }
-    // Students see classes they're enrolled in
-    else if (auth.userRole === ROLES.STUDENT) {
-      const enrollments = await getStudentClasses(auth.userId);
-      classes = enrollments.map((e: any) => e.class);
-    }
-    // Admins can see all classes (implement if needed)
-    else if (auth.userRole === ROLES.ADMIN) {
+    } else if (auth.userRole === ROLES.STUDENT) {
+      classes = await getStudentClasses(auth.userId);
+    } else if (auth.userRole === ROLES.ADMIN) {
       return sendError('NOT_IMPLEMENTED', 501);
     }
 
