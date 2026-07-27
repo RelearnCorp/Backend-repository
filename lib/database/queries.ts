@@ -768,11 +768,16 @@ export async function getClassByCode(classCode: string) {
 export async function getTeacherClasses(teacherId: string) {
   const supabase = getSupabaseServiceClient();
 
+  console.log('[getTeacherClasses] teacherId:', teacherId);
+
   const { data, error } = await supabase
     .from(TABLES.CLASSES)
     .select('*')
     .eq('teacher_id', teacherId)
     .order('created_at', { ascending: false });
+
+  console.log('[getTeacherClasses] data:', data);
+  console.log('[getTeacherClasses] error:', error);
 
   if (error) {
     throw new AppError('DB_QUERY_FAILED', 500);
@@ -786,20 +791,18 @@ export async function getStudentClasses(studentId: string) {
 
   const { data, error } = await supabase
     .from(TABLES.STUDENT_CLASSES)
-    .select(`
-      class_id,
-      classes (*)
-    `)
+    .select('class_id')
     .eq('student_id', studentId);
 
+  console.log('STUDENT ID:', studentId);
+  console.log('DATA:', data);
+  console.log('ERROR:', error);
+
   if (error) {
-    console.error('[DB] getStudentClasses error:', error);
     throw new AppError('DB_QUERY_FAILED', 500);
   }
 
-  return data
-    ?.map((item: any) => item.classes)
-    .filter(Boolean) || [];
+  return data || [];
 }
 
 // ============================================================================

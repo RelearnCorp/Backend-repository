@@ -8,6 +8,8 @@ export async function GET(request: NextRequest) {
   try {
     const auth = await authenticateRequest(request);
 
+    console.log('[API] auth:', auth);
+
     let classes: any[] = [];
 
     if (auth.userRole === ROLES.TEACHER) {
