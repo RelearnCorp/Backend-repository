@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     const { class_code } = validation.data;
 
     // Find class by code
-    const classData = await getClassByCode(class_code, true);
+    const classData = await getClassByCode(class_code);
     if (!classData) {
   return sendError('CLASS_NOT_FOUND', 404);
 }
