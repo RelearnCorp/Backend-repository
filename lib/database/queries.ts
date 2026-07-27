@@ -305,11 +305,12 @@ export async function createQuestion(
       correct_answer: correctAnswer,
       order_index: orderIndex,
     })
-    .select('*')
+    .select("*")
     .single();
 
   if (error) {
-    throw new AppError('DB_QUERY_FAILED', 500);
+    console.error("createQuestion error:", error);
+    throw error;
   }
 
   return data;
