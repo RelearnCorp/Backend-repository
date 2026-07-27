@@ -859,49 +859,45 @@ export async function checkEnrollment(studentId: string, classId: string): Promi
 export async function getClassStudents(classId: string) {
   const supabase = getSupabaseServiceClient();
 
-  // 1. Ambil student_id yang terdaftar di class
-  const { data: memberships, error: membershipError } = await supabase
+  // Ambil student_id dari student_classes
+  const { data: studentClasses, error } = await supabase
     .from(TABLES.STUDENT_CLASSES)
     .select('student_id')
     .eq('class_id', classId);
 
   console.log('[getClassStudents] classId:', classId);
-  console.log('[getClassStudents] memberships:', memberships);
-  console.log('[getClassStudents] membershipError:', membershipError);
+  console.log('[getClassStudents] studentClasses:', studentClasses);
+  console.log('[getClassStudents] error:', error);
 
-  if (membershipError) {
+  if (error) {
     throw new AppError('DB_QUERY_FAILED', 500);
   }
 
-  if (!memberships || memberships.length === 0) {
+  if (!studentClasses || studentClasses.length === 0) {
     return [];
   }
 
-  // 2. Ambil semua student_id
-  const studentIds = memberships.map(
-    (item) => item.student_id
+  // Ambil ID student
+  const studentIds = studentClasses.map(
+    (studentClass) => studentClass.student_id
   );
 
   console.log('[getClassStudents] studentIds:', studentIds);
 
-  // 3. Ambil data student dari users
-  const { data: students, error: studentsError } = await supabase
+  // Ambil data user berdasarkan student_id
+  const { data: users, error: usersError } = await supabase
     .from(TABLES.USERS)
-    .select(`
-      id,
-      full_name,
-      email
-    `)
+    .select('id, full_name, email')
     .in('id', studentIds);
 
-  console.log('[getClassStudents] students:', students);
-  console.log('[getClassStudents] studentsError:', studentsError);
+  console.log('[getClassStudents] users:', users);
+  console.log('[getClassStudents] usersError:', usersError);
 
-  if (studentsError) {
+  if (usersError) {
     throw new AppError('DB_QUERY_FAILED', 500);
   }
 
-  return students || [];
+  return users || [];
 }
 
 export async function enrollStudent(studentId: string, classId: string) {
