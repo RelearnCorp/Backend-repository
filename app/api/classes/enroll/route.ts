@@ -22,23 +22,22 @@ export async function POST(request: NextRequest) {
     const { class_code } = validation.data;
 
     // Find class by code
-    const classData = await getClassByCode(class_code);
+    const classData = await getClassByCode(class_code, true);
     if (!classData) {
-      return sendError('CLASS_NOT_FOUND', 404);
-    }
+  return sendError('CLASS_NOT_FOUND', 404);
+}
 
-    // Enroll student
-    await enrollStudent(auth.userId, classData.id);
+await enrollStudent(auth.userId, classData.id);
 
-    return sendSuccess(
-      {
-        class_id: classData.id,
-        class_name: classData.name,
-        teacher: classData.teacher,
-      },
-      'Successfully enrolled in class',
-      201
-    );
+return sendSuccess(
+  {
+    class_id: classData.id,
+    class_name: classData.name,
+    teacher: classData.teacher ?? null,
+  },
+  'Successfully enrolled in class',
+  201
+);
   } catch (error: any) {
     console.error('[API] Enroll student error:', error);
     

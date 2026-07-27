@@ -753,12 +753,23 @@ export async function getClassById(classId: string, includeTeacher = false) {
   return data || null;
 }
 
-export async function getClassByCode(classCode: string) {
+export async function getClassByCode(
+  classCode: string,
+  includeTeacher = false
+) {
   const supabase = getSupabaseServiceClient();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from(TABLES.CLASSES)
-    .select('*')
+    .select('*');
+
+  if (includeTeacher) {
+    query = supabase
+      .from(TABLES.CLASSES)
+      .select('*, teacher:users(*)');
+  }
+
+  const { data, error } = await query
     .eq('class_code', classCode)
     .single();
 
